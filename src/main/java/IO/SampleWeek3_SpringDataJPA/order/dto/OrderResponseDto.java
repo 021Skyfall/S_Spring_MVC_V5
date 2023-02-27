@@ -14,6 +14,6 @@ public class OrderResponseDto {
     private long orderId;
     private long memberId;
     private Order.OrderStatus orderStatus;
-    private List<CoffeeResponseDto> orderCoffees;
+    private List<OrderCoffeeResponseDto> orderCoffees;
     private LocalDateTime createdAt;
 }

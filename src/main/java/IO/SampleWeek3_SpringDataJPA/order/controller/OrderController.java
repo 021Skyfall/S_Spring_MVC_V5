@@ -46,7 +46,7 @@ public class OrderController {
         orderPatchDto.setOrderId(orderId);
         Order order = service.updateOrder(mapper.orderPatchDtoToOrder(orderPatchDto));
 
-        return new ResponseEntity<>(new SingleResponseDto<>(mapper.orderToOrderResponseDto(order,null)),
+        return new ResponseEntity<>(new SingleResponseDto<>(mapper.orderToOrderResponseDto(order)),
                 HttpStatus.OK);
     }
 
@@ -55,7 +55,7 @@ public class OrderController {
         Order order = service.findOrder(orderId);
 
         return new ResponseEntity<>(
-                new SingleResponseDto<>(mapper.orderToOrderResponseDto(order,null)), HttpStatus.OK);
+                new SingleResponseDto<>(mapper.orderToOrderResponseDto(order)), HttpStatus.OK);
     }
 
     @GetMapping

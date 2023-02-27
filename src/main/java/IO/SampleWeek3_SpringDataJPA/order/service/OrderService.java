@@ -3,8 +3,11 @@ package IO.SampleWeek3_SpringDataJPA.order.service;
 import IO.SampleWeek3_SpringDataJPA.coffee.service.CoffeeService;
 import IO.SampleWeek3_SpringDataJPA.exception.BusinessLogicException;
 import IO.SampleWeek3_SpringDataJPA.exception.ExceptionCode;
+import IO.SampleWeek3_SpringDataJPA.member.entity.Member;
+import IO.SampleWeek3_SpringDataJPA.member.entity.MemberStamp;
 import IO.SampleWeek3_SpringDataJPA.member.service.MemberService;
 import IO.SampleWeek3_SpringDataJPA.order.entity.Order;
+import IO.SampleWeek3_SpringDataJPA.order.entity.OrderCoffee;
 import IO.SampleWeek3_SpringDataJPA.order.repository.OrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,11 +26,13 @@ public class OrderService {
     private final OrderRepository repository;
 
     public Order createOrder(Order order) {
-        memberService.findVerifiedMember(order.getMember().getMemberId());
-        order.getOrderCoffees()
-                .stream()
-                .forEach(e -> coffeeService.findVerifiedCoffee(e.getCoffee().getCoffeeId()));
-        return repository.save(order);
+        verifyOrder(order);
+
+        Order savedOrder = savedOrder(order);
+
+        updateStamp(savedOrder);
+
+        return savedOrder;
     }
 
     public Order updateOrder(Order order) {
@@ -66,5 +71,30 @@ public class OrderService {
                 optionalOrder.orElseThrow(() ->
                         new BusinessLogicException(ExceptionCode.ORDER_NOT_FOUND));
         return findOrder;
+    }
+
+    private void verifyOrder(Order order) {
+        memberService.findVerifiedMember(order.getMember().getMemberId());
+        order.getOrderCoffees()
+                .forEach(e -> coffeeService.findVerifiedCoffee(e.getCoffee().getCoffeeId()));
+    }
+
+    private void updateStamp(Order order) {
+        Member member = memberService.findMember(order.getMember().getMemberId());
+        int stampCount = calculateStampCount(order);
+
+        MemberStamp stamp = member.getStamp();
+        stamp.setStampCount(stamp.getStampCount() + stampCount);
+    }
+
+    private int calculateStampCount(Order order) {
+        return order.getOrderCoffees().stream()
+                .map(OrderCoffee::getQuantity)
+                .mapToInt(e -> e)
+                .sum();
+    }
+
+    private Order savedOrder(Order order) {
+        return repository.save(order);
     }
 }

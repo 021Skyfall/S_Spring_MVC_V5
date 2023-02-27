@@ -17,7 +17,7 @@ public class OrderCoffee {
     private Long orderCoffeeId;
 
     @Column(nullable = false, length = 100, unique = true)
-    private Long quantity;
+    private int quantity;
 
     @ManyToOne
     @JoinColumn(name = "ORDER_ID")
