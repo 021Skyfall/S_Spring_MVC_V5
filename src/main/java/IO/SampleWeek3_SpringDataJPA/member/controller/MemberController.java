@@ -5,8 +5,9 @@ import IO.SampleWeek3_SpringDataJPA.member.dto.MemberPostDto;
 import IO.SampleWeek3_SpringDataJPA.member.entity.Member;
 import IO.SampleWeek3_SpringDataJPA.member.mapper.MemberMapper;
 import IO.SampleWeek3_SpringDataJPA.member.service.MemberService;
-import IO.SampleWeek3_SpringDataJPA.response.MultiResponseDto;
-import IO.SampleWeek3_SpringDataJPA.response.SingleResponseDto;
+import IO.SampleWeek3_SpringDataJPA.dto.MultiResponseDto;
+import IO.SampleWeek3_SpringDataJPA.dto.SingleResponseDto;
+import IO.SampleWeek3_SpringDataJPA.member.entity.Stamp;
 import IO.SampleWeek3_SpringDataJPA.utils.UriCreator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +33,13 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity postMember(@Validated @RequestBody MemberPostDto memberPostDto) {
-        Member member = service.createMember(mapper.memberPostDtoToMember(memberPostDto));
-        URI location = UriCreator.createUri(MEMBER_DEFAULT_URL, member.getMemberId());
+        Member member = mapper.memberPostDtoToMember(memberPostDto);
+
+        member.setStamp(new Stamp());
+
+        Member createdMember = service.createMember(member);
+
+        URI location = UriCreator.createUri(MEMBER_DEFAULT_URL, createdMember.getMemberId());
 
         return ResponseEntity.created(location).build();
     }

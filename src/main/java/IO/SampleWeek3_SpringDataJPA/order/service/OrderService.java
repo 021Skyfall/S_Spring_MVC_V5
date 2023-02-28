@@ -4,11 +4,11 @@ import IO.SampleWeek3_SpringDataJPA.coffee.service.CoffeeService;
 import IO.SampleWeek3_SpringDataJPA.exception.BusinessLogicException;
 import IO.SampleWeek3_SpringDataJPA.exception.ExceptionCode;
 import IO.SampleWeek3_SpringDataJPA.member.entity.Member;
-import IO.SampleWeek3_SpringDataJPA.member.entity.MemberStamp;
 import IO.SampleWeek3_SpringDataJPA.member.service.MemberService;
 import IO.SampleWeek3_SpringDataJPA.order.entity.Order;
 import IO.SampleWeek3_SpringDataJPA.order.entity.OrderCoffee;
 import IO.SampleWeek3_SpringDataJPA.order.repository.OrderRepository;
+import IO.SampleWeek3_SpringDataJPA.member.entity.Stamp;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,8 +18,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@AllArgsConstructor
+
 @Service
+@AllArgsConstructor
 public class OrderService {
     private final MemberService memberService;
     private final CoffeeService coffeeService;
@@ -40,7 +41,7 @@ public class OrderService {
 
         Optional.ofNullable(order.getOrderStatus())
                 .ifPresent(findOrder::setOrderStatus);
-        findOrder.setModifiedAt(LocalDateTime.now());
+
         return repository.save(findOrder);
     }
 
@@ -61,7 +62,6 @@ public class OrderService {
             throw new BusinessLogicException(ExceptionCode.CANNOT_CHANGE_ORDER);
         }
         findOrder.setOrderStatus(Order.OrderStatus.ORDER_CANCEL);
-        findOrder.setModifiedAt(LocalDateTime.now());
         repository.save(findOrder);
     }
 
@@ -83,8 +83,10 @@ public class OrderService {
         Member member = memberService.findMember(order.getMember().getMemberId());
         int stampCount = calculateStampCount(order);
 
-        MemberStamp stamp = member.getStamp();
+        Stamp stamp = member.getStamp();
         stamp.setStampCount(stamp.getStampCount() + stampCount);
+
+        memberService.updateMember(member);
     }
 
     private int calculateStampCount(Order order) {

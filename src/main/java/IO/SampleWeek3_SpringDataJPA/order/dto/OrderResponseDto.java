@@ -1,6 +1,5 @@
 package IO.SampleWeek3_SpringDataJPA.order.dto;
 
-import IO.SampleWeek3_SpringDataJPA.coffee.dto.CoffeeResponseDto;
 import IO.SampleWeek3_SpringDataJPA.order.entity.Order;
 import lombok.Getter;
 import lombok.Setter;

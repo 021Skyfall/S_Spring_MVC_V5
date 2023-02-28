@@ -5,7 +5,7 @@ import IO.SampleWeek3_SpringDataJPA.coffee.dto.CoffeePostDto;
 import IO.SampleWeek3_SpringDataJPA.coffee.entity.Coffee;
 import IO.SampleWeek3_SpringDataJPA.coffee.mapper.CoffeeMapper;
 import IO.SampleWeek3_SpringDataJPA.coffee.service.CoffeeService;
-import IO.SampleWeek3_SpringDataJPA.response.MultiResponseDto;
+import IO.SampleWeek3_SpringDataJPA.dto.MultiResponseDto;
 import IO.SampleWeek3_SpringDataJPA.utils.UriCreator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

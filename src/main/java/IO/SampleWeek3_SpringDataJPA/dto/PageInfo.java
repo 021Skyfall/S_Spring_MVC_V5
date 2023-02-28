@@ -1,4 +1,4 @@
-package IO.SampleWeek3_SpringDataJPA.response;
+package IO.SampleWeek3_SpringDataJPA.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

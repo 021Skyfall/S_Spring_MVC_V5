@@ -10,11 +10,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
-@AllArgsConstructor
+
 @Service
+@AllArgsConstructor
 public class MemberService {
     private final MemberRepository repository;
 
@@ -33,8 +33,6 @@ public class MemberService {
                 .ifPresent(findMember::setPhone);
         Optional.ofNullable(member.getMemberStatus())
                 .ifPresent(findMember::setMemberStatus);
-
-        findMember.setModifiedAt(LocalDateTime.now());
 
         return repository.save(findMember);
     }

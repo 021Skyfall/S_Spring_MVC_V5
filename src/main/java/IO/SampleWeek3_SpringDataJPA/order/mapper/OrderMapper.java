@@ -17,6 +17,11 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface OrderMapper {
+
+    List<OrderResponseDto> ordersToOrderResponseDtos(List<Order> orders);
+
+    Order orderPatchDtoToOrder(OrderPatchDto orderPatchDto);
+
     default Order orderPostDtoToOrder(OrderPostDto orderPostDto) {
         Order order = new Order();
         Member member = new Member();
@@ -37,11 +42,8 @@ public interface OrderMapper {
 
         return order;
     }
-    Order orderPatchDtoToOrder(OrderPatchDto orderPatchDto);
-
     @Mapping(source = "member.memberId", target = "memberId")
     OrderResponseDto orderToOrderResponseDto(Order order);
-    List<OrderResponseDto> ordersToOrderResponseDtos(List<Order> orders);
 
     @Mapping(source = "coffee.coffeeId", target = "coffeeId")
     @Mapping(source = "coffee.korName", target = "korName")

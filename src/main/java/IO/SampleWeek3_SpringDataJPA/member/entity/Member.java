@@ -1,5 +1,6 @@
 package IO.SampleWeek3_SpringDataJPA.member.entity;
 
+import IO.SampleWeek3_SpringDataJPA.Audit.Auditable;
 import IO.SampleWeek3_SpringDataJPA.order.entity.Order;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class Member {
+public class Member extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long memberId;
@@ -33,21 +33,11 @@ public class Member {
     @Column(length = 20, nullable = false)
     private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(nullable = false, name = "LAST_MODIFIED_AT")
-    private LocalDateTime modifiedAt = LocalDateTime.now();
-
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 
-    public void addOrder(Order order) {
-        orders.add(order);
-    }
-
-    @OneToOne(mappedBy = "member")
-    private MemberStamp stamp;
+    @OneToOne(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE} )
+    private Stamp stamp;
 
     public Member(String email) {
         this.email = email;
@@ -57,6 +47,20 @@ public class Member {
         this.email = email;
         this.name = name;
         this.phone = phone;
+    }
+
+    public void setOrder(Order order) {
+        orders.add(order);
+        if (order.getMember() != this) {
+            order.setMember(this);
+        }
+    }
+
+    public void setStamp(Stamp stamp) {
+        this.stamp = stamp;
+        if (stamp.getMember() != this) {
+            stamp.setMember(this);
+        }
     }
 
     @AllArgsConstructor

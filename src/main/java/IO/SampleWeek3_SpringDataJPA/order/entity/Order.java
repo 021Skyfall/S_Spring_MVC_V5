@@ -1,10 +1,10 @@
 package IO.SampleWeek3_SpringDataJPA.order.entity;
 
+import IO.SampleWeek3_SpringDataJPA.Audit.Auditable;
 import IO.SampleWeek3_SpringDataJPA.member.entity.Member;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,19 +12,13 @@ import java.util.List;
 @Getter
 @Setter
 @Entity(name = "ORDERS")
-public class Order {
+public class Order extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long orderId;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus = OrderStatus.ORDER_REQUEST;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(nullable = false, name = "LAST_MODIFIED_AT")
-    private LocalDateTime modifiedAt = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
